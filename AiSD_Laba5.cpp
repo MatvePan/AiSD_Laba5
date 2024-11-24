@@ -7,7 +7,7 @@ struct Student {
 	string name;
 	int kurs;
 	string date;
-	int number;
+	string number;
 };
 
 struct Tree {
@@ -82,13 +82,14 @@ private:
 
 	void prin(Tree* leaf) {
 		if (leaf) {
-			print(leaf->left);
+			prin(leaf->left);
+			cout << endl;
 			cout << "Билет: " << leaf->student.index << "\n";
 			cout << "Имя: " << leaf->student.name << "\n";
 			cout << "Курс: " << leaf->student.kurs << "\n";
 			cout << "Дата зачисления: " << leaf->student.date << "\n";
-			cout << "Контакт: " << leaf->student.number << "\n";
-			print(leaf->right);
+			cout << "Почта/номер телефона: " << leaf->student.number << "\n";
+			prin(leaf->right);
 		}
 	}
 
@@ -116,7 +117,7 @@ private:
 		if (index < leaf->student.index)
 			leaf->left = delet(leaf->left, index);
 		else if (index > leaf->student.index)
-			leaf->right - delet(leaf->right, index);
+			leaf->right = delet(leaf->right, index);
 		else {
 			Tree* left = leaf->left;
 			Tree* right = leaf->right;
@@ -130,7 +131,7 @@ private:
 			min->left = left;
 			return balance(min);
 		}
-		returm balance(leaf);
+		return balance(leaf);
 	}
 
 public:
@@ -139,11 +140,13 @@ public:
 		clear(root);
 	}
 
-	void addStudent(Studenr& student)
+	void addStudent(Student& student) {
 		root = add(root, student);
+	}
 
-	void show()
+	void show() {
 		prin(root);
+	}
 
 	void clear() {
 		clear(root);
@@ -155,82 +158,92 @@ public:
 		return leaf ? &leaf->student : nullptr;
 	}
 
-	void dele(const string& index)
+	void dele(const string& index) {
 		root = delet(root, index);
+	}
 };
 
 void addler(AVLTree& birch) {
+	cout << endl;
 	Student student;
 	cout << "Введите номер билета\n";
 	cin >> student.index;
+	cin.ignore();
 	cout << "Введите ФИО\n";
 	getline(cin, student.name);
 	cout << "Введите курс\n";
 	cin >> student.kurs;
+	cin.ignore();
 	cout << "Введите даты зачисления\n";
 	getline(cin, student.date);
-	cout << "Введите контакты\n";
+	cout << "Введите почту/номер телефона\n";
 	getline(cin, student.number);
 	birch.addStudent(student);
 }
 
-studsearch(AVLTree& birch) {
+void studsearch(AVLTree& birch) {
+	cout << endl;
 	string indox;
 	cin >> indox;
 	Student* student = birch.serach(indox);
 	if (student) {
-		cout << "Билет: " << student->student.index << "\n";
-		cout << "Имя: " << student->student.name << "\n";
-		cout << "Курс: " << student->student.kurs << "\n";
-		cout << "Дата зачисления: " << student->student.date << "\n";
-		cout << "Контакт: " << student->student.number << "\n";
+		cout << "Билет: " << student->index << "\n";
+		cout << "Имя: " << student->name << "\n";
+		cout << "Курс: " << student->kurs << "\n";
+		cout << "Дата зачисления: " << student->date << "\n";
+		cout << "Почта/номер телефона: " << student->number << "\n";
 	}
 	else
 		cout << "Студент не найден\n";
 }
 
-studels(AVLTree& birch) {
+void studels(AVLTree& birch) {
 	birch.clear();
-	cour << "Студенты удалены\n";
+	cout << endl;
+	cout << "Студенты удалены\n";
 }
 
-studel(AVLTree& birch) {
+void studel(AVLTree& birch) {
 	string indos;
+	cout << endl;
 	cout << "Введите билет для удаления\n";
-	cin >> indox;
-	birch.dele(indox);
+	cin >> indos;
+	birch.dele(indos);
 }
 
-inr main() {
+int main() {
 	setlocale(LC_ALL, "RUS");
 	AVLTree birch;
-	int mode;
-	cout << "1. Добавить студента\n";
-	cout << "2. Вывод информации студентов\n";
-	cout << "3. Удаление информации студентов\n";
-	cout << "4. Поиск\n";
-	cout << "5. Удаление студента\n";
-	cout << "0. Выход\n";
-	cin << mode;
-	switch (mode) {
-	case 1:
-		addler(birch);
-		break;
-	case 2:
-		birch.show();
-		break;
-	case 3:
-		studsearch(birch);
-		break;
-	case 4:
-		studel(birch);
-		break;
-	case 5:
-		studels(birch);
-		break;
+	while (true) {
+		int mode;
+		cout << endl;
+		cout << "1. Добавить студента\n";
+		cout << "2. Вывод информации студентов\n";
+		cout << "3. Удаление информации студентов\n";
+		cout << "4. Поиск\n";
+		cout << "5. Удаление студента\n";
+		cout << "0. Выход\n";
+		cin >> mode;
+		switch (mode) {
+		case 1:
+			addler(birch);
+			break;
+		case 2:
+			birch.show();
+			break;
+		case 3:
+			studel(birch);
+			break;
+		case 4:
+			studsearch(birch);
+			break;
+		case 5:
+			studels(birch);
+			break;
+		case 0:
+			return 0;
+		default:
+			cout << "Неверный ввод\n";
+		}
 	}
-	case 0:
-		return 0;
-	default:
-		cout << "Неверный ввод\n";
 }
